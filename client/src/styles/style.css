@@ -1,0 +1,63 @@
+.bg-yellow{
+    background-color: #FFC700 !important;
+}
+
+.header-text{
+    padding: 0 80px;
+    
+}
+
+.text-price{
+    color: red;
+}
+
+.btn-order{
+    width: 100%;
+}
+
+.text-yellow{
+    color: #FFC700;
+    font-weight: bold;
+}
+
+.btn-nav{
+    background-color: #433434 !important;
+}
+
+.profile-text{
+    margin-top: -20px;
+}
+
+.btn-finish{
+    background-color: #aff5d8 !important;
+    color: #4bed58 !important;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.border-form{
+    background-color: #ebe1e1 !important;
+    color: white !important;
+}
+
+.btn-map{
+    width: 100%;
+    background-color: #433434 !important;
+    height: 80%;
+}
+
+.input-img{
+    width: 100%;
+    padding: 8px;
+    color: gray !important;
+    border-radius: 8px;
+}
+
+.text-price{
+    color: red;
+}
+
+.badge{
+    margin-left: -25px;
+    margin-top: 20px;
+}
