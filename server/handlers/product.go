@@ -7,14 +7,13 @@ import (
 	"foodways/models"
 	"foodways/repositories"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/gorilla/mux"
 )
-
-var path_file = "http://localhost:8080/uploads/"
 
 type handlerProduct struct {
 	ProductRepository repositories.ProductRepository
@@ -35,8 +34,8 @@ func (h *handlerProduct) FindProducts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for i, f := range products {
-		products[i].Image = path_file + f.Image
+	for i, p := range products {
+		products[i].Image = os.Getenv("PATH_FILE") + p.Image
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -58,7 +57,7 @@ func (h *handlerProduct) GetProducts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	product.Image = path_file + product.Image
+	product.Image = os.Getenv("PATH_FILE") + product.Image
 
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Status: "Success", Data: product}
@@ -136,7 +135,7 @@ func (h *handlerProduct) CreateProducts(w http.ResponseWriter, r *http.Request) 
 func (h *handlerProduct) UpdateProducts(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	dataContex := r.Context().Value("dataFile") 
+	dataContex := r.Context().Value("dataFile")
 	filename := dataContex.(string)
 
 	price, _ := strconv.Atoi(r.FormValue("price"))

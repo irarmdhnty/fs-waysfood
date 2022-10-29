@@ -42,6 +42,7 @@ const Login = ({
       const alert = <Alert variant="success">Login berhasil!</Alert>;
 
       setMessage(alert);
+      setShow(false);
 
       let payload = data.data.data;
       dispatch({
@@ -104,29 +105,33 @@ const Login = ({
             <div className="text-yellow m-3">
               <h2>Login</h2>
             </div>
-            <FormAll
+            <input
               label="Email"
               type="email"
               placeholder="Email"
               name="email"
               value={userLogin.email}
               onChange={handleChange}
+              className="p-3 w-100 rounded rounded-3 my-2 border-0 shadow-lg"
+              required
             />
-            <FormAll
+            <input
               label="Password"
               type="password"
               name="password"
               placeholder="Password"
               value={userLogin.password}
               onChange={handleChange}
+              className="p-3 w-100 rounded rounded-3 my-2 border-0 shadow-lg"
+              required
             />
+            <Button
+              className="btn-order btn-nav px-5"
+              onClick={(e) => handleSubmit.mutate(e)}
+            >
+              Login
+            </Button>
           </Form>
-          <Button
-            className="btn-order btn-nav px-5"
-            onClick={(e) => handleSubmit.mutate(e)}
-          >
-            Login
-          </Button>
           <p className="mt-3">
             Don't have an account ? click
             <span

@@ -3,13 +3,14 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import FormAll from "../../Components/Atoms/FormAll";
 import iconFile from "../../assets/icon-file.svg";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useMutation } from "react-query";
+import { useContext, useEffect, useState } from "react";
+import { useMutation, useQuery } from "react-query";
 import { API } from "../../config/api";
+import { UserContext } from "../../Contexts/userContext";
 
 const AddProduct = () => {
   const navigate = useNavigate();
-  const [preview, setPreview] = useState(null); //For image preview
+  const [preview, setPreview] = useState(null);
 
   const [form, setForm] = useState({
     title: "",
@@ -52,6 +53,8 @@ const AddProduct = () => {
     }
   });
 
+  
+
   return (
     <Container>
       <h2 className="my-5">Add Product</h2>
@@ -61,49 +64,43 @@ const AddProduct = () => {
             <FormAll
               label="Title"
               type="text"
-              name="name"
+              name="title"
               onChange={handleChange}
               placeholder="Title"
-              className="border-form border-dark"
+              className="border-form border-dark text-dark"
             />
           </Col>
           <Col className="col-12 col-md-3">
-            {preview && (
-              <div>
-                <img
-                  src={preview}
-                  style={{
-                    maxWidth: "150px",
-                    maxHeight: "150px",
-                    objectFit: "cover",
-                  }}
-                  alt={preview}
-                />
-              </div>
-            )}
             <Form.Group
-              className="mb-3 d-flex"
+              className="mb-3 p-2 rounded border border-form border-dark text-dark border-grey3"
               controlId="formBasicEmail"
-              style={{ height: "90%" }}
             >
+              {preview && (
+                <div>
+                  <img
+                    src={preview}
+                    style={{
+                      maxWidth: "150px",
+                      maxHeight: "150px",
+                      objectFit: "cover",
+                    }}
+                    alt={preview}
+                  />
+                </div>
+              )}
               <Form.Control
+                name="image"
+                onChange={handleChange}
                 type="file"
                 placeholder="Attach Image"
                 hidden
-                name="image"
-                onChange={handleChange}
               />
-              <Form.Label className="d-flex align-items-center border-form border-dark input-img border border-1 ">
-                Attach Image
+              <Form.Label className="d-flex justify-content-between btn-full align-items-center  ">
+                <div className="text-grey3">Attach Image </div>
+                <div className="">
+                  <img src={iconFile} alt="" />
+                </div>
               </Form.Label>
-              <img
-                src={iconFile}
-                style={{
-                  marginLeft: "-30px",
-                  paddingBottom: "8px",
-                  width: "20px",
-                }}
-              />
             </Form.Group>
           </Col>
         </Row>
@@ -113,14 +110,10 @@ const AddProduct = () => {
           name="price"
           onChange={handleChange}
           placeholder="Price"
-          className="border-form border-dark"
+          className="border-form border-dark text-dark"
         />
         <div className="d-flex justify-content-end">
-          <Button
-            className="btn-nav w-25 mt-5 "
-            type="submit"
-            onClick={() => navigate("/home-admin")}
-          >
+          <Button className="btn-nav w-25 mt-5 " type="submit">
             Save
           </Button>
         </div>
