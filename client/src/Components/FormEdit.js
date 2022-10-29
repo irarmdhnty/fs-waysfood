@@ -40,7 +40,7 @@ const FormEdit = () => {
   };
 
   let { data: user } = useQuery("editUserCache", async () => {
-    const response = await API.get(`user/${state.user.id}`);
+    const response = await API.get(`/users/${state.user.id}`);
     return response.data.data;
   });
 
@@ -85,6 +85,7 @@ const FormEdit = () => {
         <Col className="col-12 col-md-9">
           <FormAll
             name="fullName"
+            value={form?.fullName}
             onChange={handleChange}
             label="Full Name"
             type="text"
@@ -128,6 +129,7 @@ const FormEdit = () => {
       </Row>
       <FormAll
         name="email"
+        value={form?.email}
         onChange={handleChange}
         label="Email"
         type="email"
@@ -136,6 +138,7 @@ const FormEdit = () => {
       />
       <FormAll
         name="phone"
+        value={form?.phone}
         onChange={handleChange}
         label="Phone"
         type="text"
@@ -146,6 +149,7 @@ const FormEdit = () => {
         <Col className="col-12 col-md-9">
           <FormAll
             name="location"
+            value={form?.location}
             onChange={handleChange}
             label="Location"
             type="text"

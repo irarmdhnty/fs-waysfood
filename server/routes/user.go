@@ -2,6 +2,7 @@ package routes
 
 import (
 	"foodways/handlers"
+	"foodways/pkg/middleware"
 	"foodways/pkg/mysql"
 	"foodways/repositories"
 
@@ -14,6 +15,6 @@ func userRouter(r *mux.Router) {
 
 	r.HandleFunc("/users", h.FindUsers).Methods("GET")
 	r.HandleFunc("/users/{id}", h.GetUser).Methods("GET")
-	r.HandleFunc("/users/{id}", h.UpdateUser).Methods("PATCH")
+	r.HandleFunc("/users/{id}", middleware.UploadFile(h.UpdateUser)).Methods("PATCH")
 	r.HandleFunc("/users/{id}", h.DeleteUser).Methods("DELETE")
 }

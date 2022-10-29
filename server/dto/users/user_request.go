@@ -17,4 +17,5 @@ type UpdateUserRequest struct {
 	Phone    string `json:"phone" form:"phone" gorm:"type: varchar(255)"`
 	Image    string `json:"image" form:"image" gorm:"type: varchar(255)"`
 	Location string `json:"location" form:"location" gorm:"type: varchar(255)"`
+	Role     string `json:"role" form:"role" validate:"required"`
 }
