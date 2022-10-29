@@ -9,11 +9,10 @@ import { Patners } from "../DataDummy/Patners";
 import Login from "./Auth/Login";
 import Register from "./Auth/Register";
 
-function PartnerCard({ item }) {
+function ContentPatner() {
   const navigate = useNavigate();
 
   const [state] = useContext(UserContext);
-
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
 
@@ -21,26 +20,44 @@ function PartnerCard({ item }) {
     setShowLogin(true);
   };
 
+  let { data: users } = useQuery("usersCache", async () => {
+    const response = await API.get("/users");
+    console.log("responseeeee", response.data.data);
+    return response.data.data;
+  });
+
+  const partner = users?.filter((item) => item.role == "Partner");
+
   return (
-    <>
-      <Card
-        onClick={
-          state.isLogin ? () => navigate(`/detail/${item.id}`) : handleShow
-        }
-        style={{ width: "100%" }}
-        className="my-3 p-3 border-0"
-      >
-        <Row className="d-flex align-items-center">
-          <Col className="col-5">
-            <img src={item.image} style={{ width: "65px", height: "65px" }} />
+    <Container>
+      <h2 className="mt-5">Popular Restaurant</h2>
+      <Row>
+        {partner?.map((item) => (
+          <Col key={item?.id} className="my-3 col-12 col-md-3">
+            <Card
+              style={{ width: "100%" }}
+              className="my-3 p-3 border-0"
+              onClick={() => {
+                !state.isLogin ? setShowLogin(true) : navigate("/detail");
+              }}
+            >
+              <Row className="d-flex align-items-center">
+                <Col className="col-5">
+                  <img
+                    src={item?.image}
+                    style={{ width: "65px", height: "65px" }}
+                  />
+                </Col>
+                <Col className="col-7 ps-0">
+                  <Card.Title className="ff-abhaya text-start fw-extra-bold f-24">
+                    {item.fullName}
+                  </Card.Title>
+                </Col>
+              </Row>
+            </Card>
           </Col>
-          <Col className="col-7 ps-0">
-            <Card.Title className="ff-abhaya text-start fw-extra-bold f-24">
-              {item.fullName}
-            </Card.Title>
-          </Col>
-        </Row>
-      </Card>
+        ))}
+      </Row>
       <Login
         showLog={showLogin}
         setShowLog={setShowLogin}
@@ -52,29 +69,6 @@ function PartnerCard({ item }) {
         setShowReg={setShowRegister}
         setShowLog={setShowLogin}
       />
-    </>
-  );
-}
-
-function ContentPatner() {
-  let { data: users } = useQuery("usersCache", async () => {
-    const response = await API.get("/users");
-    return response.data.data;
-  });
-
-  return (
-    <Container>
-      <h2 className="mt-5">Popular Restaurant</h2>
-      <Row>
-        {users?.map(
-          (item, index) =>
-            item.role === "partner" && (
-              <Col key={index} className="my-3 col-12 col-md-3">
-                <PartnerCard item={item} key={index} />
-              </Col>
-            )
-        )}
-      </Row>
     </Container>
   );
 }

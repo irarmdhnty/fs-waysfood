@@ -1,71 +1,162 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 import FormAll from "../../Components/Atoms/FormAll";
 
-import mapIcon from '../../assets/map-icon.png';
-import mapsImg from '../../assets/maps-img.svg'
+import mapIcon from "../../assets/map-icon.png";
+import mapsImg from "../../assets/maps-img.svg";
 import iconFile from "../../assets/icon-file.svg";
+import { API } from "../../config/api";
+import { useQuery } from "react-query";
+import { UserContext } from "../../Contexts/userContext";
 
 function EditAdmin() {
   const navigate = useNavigate();
-
   const [show, setShow] = useState(false);
+
+  const [state, dispatch] = useContext(UserContext);
+  const [preview, setPreview] = useState(null);
+
+  const [form, setForm] = useState({
+    image: "",
+    fullName: "",
+    email: "",
+    phone: "",
+    location: "",
+  });
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]:
+        e.target.type === "file" ? e.target.files : e.target.value,
+    });
+
+    if (e.target.type === "file") {
+      let url = URL.createObjectURL(e.target.files[0]);
+      setPreview(url);
+    }
+  };
+
+  let { data: user } = useQuery("editUserAdminCache", async () => {
+    const response = await API.get(`/users/${state.user.id}`);
+    return response.data.data;
+  });
+
+  useEffect(() => {
+    if (user) {
+      setPreview(user.image);
+      setForm({
+        ...form,
+        fullName: user.fullName,
+        email: user.email,
+        phone: user.phone,
+        location: user.location,
+      });
+    }
+  }, [user]);
+
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+
+      const formData = new FormData();
+      if (form.image) {
+        formData.set("image", form?.image[0], form?.image[0]?.name);
+      }
+      formData.set("fullname", form.fullName);
+      formData.set("email", form.email);
+      formData.set("phone", form.phone);
+      formData.set("location", form.location);
+
+      const response = await API.patch("/users/" + user.id, formData);
+      console.log("ini data updated user", response.data);
+
+      navigate("/profile-admin");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Container>
       <h2 className="my-5">Edit Profile Patner</h2>
-      <Form>
+      <Form onSubmit={(e) => handleSubmit(e)}>
         <Row>
           <Col className="col-12 col-md-9">
             <FormAll
+              name="fullName"
+              value={form?.fullName}
+              onChange={handleChange}
               label="Full Name"
               type="text"
               placeholder="Full Name"
-              className="border-form border-dark"
+              className="border-form border-dark text-dark"
             />
           </Col>
           <Col className="col-12 col-md-3">
             <Form.Group
-              className="mb-3 d-flex"
+              className="mb-3 p-2 rounded border border-form border-dark text-dark border-grey3"
               controlId="formBasicEmail"
-              style={{ height: "90%" }}
             >
-              <Form.Control type="file" placeholder="Attach Image" hidden />
-              <Form.Label className="d-flex align-items-center border-form border-dark input-img border border-1 ">
-                Attach Image
-              </Form.Label>
-              <img
-                src={iconFile}
-                style={{
-                  marginLeft: "-30px",
-                  paddingBottom: "8px",
-                  width: "20px",
-                }}
+              {preview && (
+                <div>
+                  <img
+                    src={preview}
+                    style={{
+                      maxWidth: "150px",
+                      maxHeight: "150px",
+                      objectFit: "cover",
+                    }}
+                    alt={preview}
+                  />
+                </div>
+              )}
+              <Form.Control
+                name="image"
+                onChange={handleChange}
+                type="file"
+                placeholder="Attach Image"
+                hidden
               />
+              <Form.Label className="d-flex justify-content-between btn-full align-items-center  ">
+                <div className="text-grey3">Attach Image </div>
+                <div className="">
+                  <img src={iconFile} alt="" />
+                </div>
+              </Form.Label>
             </Form.Group>
           </Col>
         </Row>
         <FormAll
+          name="email"
+          value={form?.email}
+          onChange={handleChange}
           label="Email"
           type="email"
           placeholder="Email"
-          className="border-form border-dark"
+          className="border-form border-dark text-dark"
         />
         <FormAll
+          name="phone"
+          value={form?.phone}
+          onChange={handleChange}
           label="Phone"
-          type="email"
+          type="text"
           placeholder="Phone"
-          className="border-form border-dark"
+          className="border-form border-dark text-dark"
         />
         <Row>
           <Col className="col-12 col-md-9">
             <FormAll
+              name="location"
+              value={form?.location}
+              onChange={handleChange}
               label="Location"
               type="text"
               placeholder="Location"
-              className="border-form border-dark"
+              className="border-form border-dark text-dark"
             />
           </Col>
           <Col className="col-12 col-md-3">
@@ -92,11 +183,7 @@ function EditAdmin() {
           </Col>
         </Row>
         <div className="d-flex justify-content-end">
-          <Button
-            className="btn-nav w-25 mt-5 "
-            type="submit"
-            onClick={() => navigate("/profile-admin")}
-          >
+          <Button className="btn-nav w-25 mt-5 " type="submit">
             Save
           </Button>
         </div>

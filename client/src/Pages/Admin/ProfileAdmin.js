@@ -14,12 +14,10 @@ function ProfileAdmin() {
   const handleNavigate = () => {
     navigate("/edit-admin");
   };
+  
   const [user, setUser] = useState(null);
-  // const { isLogin, setIsLogin } = useContext(LoginContext);
-
   const getUser = async () => {
     const response = await API.get(`/users/${state.user.id}`);
-    console.log("ini response ea ", response);
     setUser(response.data.data);
   };
 
