@@ -15,7 +15,7 @@ func ProductRouter(r *mux.Router) {
 
 	r.HandleFunc("/products", middleware.Auth(h.FindProducts)).Methods("GET")
 	r.HandleFunc("/product/{id}", middleware.Auth(h.GetProducts)).Methods("GET")
-	r.HandleFunc("/products/{userId}", h.GetProductByPartner).Methods("GET")
+	r.HandleFunc("/products/{userId}", middleware.Auth(h.GetProductByPartner)).Methods("GET")
 	r.HandleFunc("/product", middleware.Auth(middleware.UploadFile(h.CreateProducts))).Methods("POST")
 	r.HandleFunc("/product/{id}", middleware.Auth(middleware.UploadFile(h.UpdateProducts))).Methods("PATCH")
 	r.HandleFunc("/product/{id}", middleware.Auth(h.DeleteProducts)).Methods("DELETE")

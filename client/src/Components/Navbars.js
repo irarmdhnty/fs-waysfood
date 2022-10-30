@@ -79,7 +79,7 @@ function Navbars() {
               <div>
                 <Dropdown>
                   <img
-                    src={cart}
+                    src={state.image}
                     className="mx-3"
                     style={{ cursor: "pointer" }}
                     onClick={() => navigate("/order")}

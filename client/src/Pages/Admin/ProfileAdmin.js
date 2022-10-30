@@ -14,15 +14,15 @@ function ProfileAdmin() {
   const handleNavigate = () => {
     navigate("/edit-admin");
   };
-  
-  const [user, setUser] = useState(null);
-  const getUser = async () => {
+
+  const [userAdmin, setUserAdmin] = useState(null);
+  const getUserAdmin = async () => {
     const response = await API.get(`/users/${state.user.id}`);
-    setUser(response.data.data);
+    setUserAdmin(response.data.data);
   };
 
   useEffect(() => {
-    getUser();
+    getUserAdmin();
   }, [state]);
 
   return (
@@ -32,7 +32,7 @@ function ProfileAdmin() {
           <h2 className="mb-5">My Profile Patner</h2>
           <Row>
             <Col className="col-5 col-lg-5">
-              <img alt="user" src={user?.image} width="210px" />
+              <img alt="user" src={userAdmin?.image} width="210px" />
               <Button className="btn-nav mt-3 w-100" onClick={handleNavigate}>
                 Edit Profile
               </Button>
@@ -40,15 +40,15 @@ function ProfileAdmin() {
             <Col>
               <div className="mb-5">
                 <p>FullName</p>
-                <p className="profile-text">{user?.fullName}</p>
+                <p className="profile-text">{userAdmin?.fullName}</p>
               </div>
               <div className="mb-5">
                 <p>Email</p>
-                <p className="profile-text">{user?.email}</p>
+                <p className="profile-text">{userAdmin?.email}</p>
               </div>
               <div>
                 <p>Phone</p>
-                <p className="profile-text">{user?.phone}</p>
+                <p className="profile-text">{userAdmin?.phone}</p>
               </div>
             </Col>
           </Row>

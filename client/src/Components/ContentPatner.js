@@ -35,10 +35,10 @@ function ContentPatner() {
         {partner?.map((item) => (
           <Col key={item?.id} className="my-3 col-12 col-md-3">
             <Card
-              style={{ width: "100%" }}
-              className="my-3 p-3 border-0"
+              style={{  }}
+              className="my-3 p-3 border-0 shadow"
               onClick={() => {
-                !state.isLogin ? setShowLogin(true) : navigate("/detail");
+                !state.isLogin ? setShowLogin(true) : navigate(`/detail/${item.id}`);
               }}
             >
               <Row className="d-flex align-items-center">
