@@ -65,13 +65,14 @@ func (h *handlerUser) GetUser(w http.ResponseWriter, r *http.Request) {
 func (h *handlerUser) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	dataContex := r.Context().Value("dataFile")
-	fmt.Print("sampe sini ga", dataContex)
+	dataUpload := r.Context().Value("dataFile")
 	filename := ""
-	if dataContex != nil {
-		filename = dataContex.(string)
-	}
+	fmt.Println(dataUpload)
 
+	if dataUpload != nil {
+		filename = dataUpload.(string)
+	}
+	
 	request := usersdto.UpdateUserRequest{
 		FullName: r.FormValue("fullname"),
 		Email:    r.FormValue("email"),
@@ -133,6 +134,8 @@ func (h *handlerUser) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
+
+	user, _ = h.UserRepository.GetUser(user.ID)
 
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Status: "success", Data: convertResponse(data)}

@@ -9,8 +9,12 @@ type LoginResponse struct {
 }
 
 type CheckAuthResponse struct {
-	Id       int    `gorm:"type: int" json:"id"`
-	FullName string `gorm:"type: varchar(255)" json:"name"`
-	Email    string `gorm:"type: varchar(255)" json:"email"`
-	Role     string `gorm:"type: varchar(255)" json:"role"`
+	Id       int    `json:"id"`
+	Email    string `json:"email"`
+	FullName string `json:"fullName"`
+	Password string `json:"password"`
+	Gender   string `json:"gender"`
+	Phone    string `json:"phone"`
+	Role     string `json:"role"`
+	Image    string `json:"image"`
 }

@@ -138,6 +138,7 @@ func (h *handlerAuth) CheckAuth(w http.ResponseWriter, r *http.Request) {
 	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
 	userId := int(userInfo["id"].(float64))
 
+	// Check User by Id
 	user, err := h.AuthRepository.Getuser(userId)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -146,13 +147,17 @@ func (h *handlerAuth) CheckAuth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	checkAuthResponse := authdto.CheckAuthResponse{
+	CheckAuthResponse := authdto.CheckAuthResponse{
 		Id:       user.ID,
 		FullName: user.FullName,
 		Email:    user.Email,
-		Role: user.Role,
+		Role:     user.Role,
+		Gender:   user.Gender,
+		Phone:    user.Phone,
+		Image:    user.Image,
 	}
+
 	w.Header().Set("Content-Type", "application/json")
-	response := dto.SuccessResult{Status: "Success", Data: checkAuthResponse}
+	response := dto.SuccessResult{Status: "Success", Data: CheckAuthResponse}
 	json.NewEncoder(w).Encode(response)
 }

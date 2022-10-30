@@ -2,7 +2,7 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 
 import FormAll from "../../Components/Atoms/FormAll";
 import iconFile from "../../assets/icon-file.svg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { API } from "../../config/api";
@@ -10,6 +10,7 @@ import { UserContext } from "../../Contexts/userContext";
 
 const AddProduct = () => {
   const navigate = useNavigate();
+  const params = useParams().id;
   const [preview, setPreview] = useState(null);
 
   const [form, setForm] = useState({
@@ -46,14 +47,12 @@ const AddProduct = () => {
         },
       });
 
-      navigate("/detail");
+      navigate("/");
       console.log("ini insert product", data);
     } catch (error) {
       console.log(error);
     }
   });
-
-  
 
   return (
     <Container>

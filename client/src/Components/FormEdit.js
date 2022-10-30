@@ -71,7 +71,16 @@ const FormEdit = () => {
       formData.set("location", form.location);
 
       const response = await API.patch("/users/" + user.id, formData);
-      console.log("ini data updated user", response.data);
+
+      const auth = await API.get("/check-auth");
+
+      let payload = auth.data.data;
+      payload.token = localStorage.token;
+
+      dispatch({
+        type: "USER_SUCCESS",
+        payload,
+      });
 
       navigate("/profile");
     } catch (error) {
@@ -79,6 +88,18 @@ const FormEdit = () => {
     }
   };
 
+  useEffect(() => {
+    if (user) {
+      setPreview(user.image);
+      setForm({
+        ...form,
+        fullName: user.fullNname,
+        email: user.email,
+        phone: user.phone,
+        location: user.location,
+      });
+    }
+  }, [user]);
   return (
     <Form onSubmit={(e) => handleSubmit(e)}>
       <Row>

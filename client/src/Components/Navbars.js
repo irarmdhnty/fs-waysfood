@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Badge,
   Button,
@@ -23,6 +23,7 @@ import logoutIcon from "../assets/logout-icon.svg";
 import foodIcon from "../assets/food-icon.svg";
 import admin from "../assets/admin.svg";
 import { UserContext } from "../Contexts/userContext";
+import { API } from "../config/api";
 
 function Navbars() {
   const navigate = useNavigate();
@@ -31,9 +32,21 @@ function Navbars() {
   console.log(state);
 
   const { dataCart, setDataCart } = useContext(CartContext);
+  const [user, setUser] = useState(null);
 
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+
+  const getUser = async () => {
+    const response = await API.get(`/users/${state.user.id}`);
+    setUser(response.data.data);
+  };
+
+  useEffect(()=>{
+    if(state.user){
+      getUser()
+    }
+  }, [state])
 
   const handleLogut = () => {
     dispatch({
@@ -79,12 +92,12 @@ function Navbars() {
               <div>
                 <Dropdown>
                   <img
-                    src={state.image}
+                    src={cart}
                     className="mx-3"
                     style={{ cursor: "pointer" }}
                     onClick={() => navigate("/order")}
                   />
-                  {dataCart.length > 0 && (
+                  {dataCart?.length > 0 && (
                     <Badge
                       style={{ width: "25px", height: "20px" }}
                       className="bg-danger position-absolute badge"
@@ -93,7 +106,7 @@ function Navbars() {
                     </Badge>
                   )}
                   <Dropdown.Toggle variant="bg-yellow" id="dropdown-basic">
-                    <img src={users} />
+                  <img src={user?.image} width={40} height={40} className="rounded-circle" />
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
                     <Dropdown.Item onClick={() => navigate("/profile")}>
@@ -112,7 +125,7 @@ function Navbars() {
               <div>
                 <Dropdown>
                   <Dropdown.Toggle variant="bg-yellow" id="dropdown-basic">
-                    <img src={admin} />
+                  <img src={user?.image} width={40} height={40} className="rounded-circle" />
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
                     <Dropdown.Item onClick={() => navigate("/profile-admin")}>

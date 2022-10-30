@@ -79,10 +79,10 @@ function App() {
 
   const client = new QueryClient();
 
-  const [dataCart, setDataCart] = useState([]);
+  const [cartLength, setCartLength] = useState(0);
 
   return (
-    <CartContext.Provider value={{ dataCart, setDataCart }}>
+    <CartContext.Provider value={{ cartLength, setCartLength }}>
       <QueryClientProvider client={client}>
         <Router>
           <Navbars />

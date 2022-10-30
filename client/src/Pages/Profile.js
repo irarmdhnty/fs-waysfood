@@ -25,9 +25,6 @@ function Profile() {
   useEffect(() => {
     getUser();
   }, [state])
-
-  // const { isLogin, setIsLogin } = useContext(LoginContext);
-
   
   return (
     <Container>
