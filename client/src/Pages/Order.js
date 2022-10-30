@@ -15,23 +15,40 @@ import { carts } from "../DataDummy/Cart";
 import { CartContext } from "../../src/Contexts/CartContext";
 import { API } from "../config/api";
 import { useQuery } from "react-query";
+import convertRupiah from "rupiah-format";
 
 import mapsImg from "../assets/maps-img.svg";
 import mapIcon from "../assets/map-icon.png";
 import trash from "../assets/trash-icon.svg";
 import cartEmpty from "../assets/empty-cart.png";
+import done from "../assets/check.png";
+import Map from "../Components/Map";
 
 function Order() {
+  const [showPay, setShowPay] = useState(false);
+
+  const [showMap, setShowMap] = useState(false);
+  const [latitudeNow, setLatitudeNow] = useState("");
+  const [longitudeNow, setLongitudeNow] = useState("");
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      setLatitudeNow(position.coords.latitude);
+      setLongitudeNow(position.coords.longitude);
+    });
+  }, []);
+
+  const position = [latitudeNow, longitudeNow];
+
   const [show, setShow] = useState(false);
   const { cartLength, setCartLength } = useContext(CartContext);
-
   // add to cart
   const addToCartHandler = async (productId, productPrice) => {
     try {
       const response = await API.post(`/cart/add/${productId}`, {
         price: productPrice,
       });
-      console.log('test',response.data.data)
+      console.log("test", response.data.data);
       refetch();
       const getCart = await API.get("/carts");
       setCartLength(getCart.data.data.length);
@@ -86,7 +103,10 @@ function Order() {
         </Form.Group>
         <Form.Group className="col-12 col-lg-3">
           <div>
-            <Button className="btn-map btn-nav p-2 mb-3" onClick={setShow}>
+            <Button
+              className="btn-map btn-nav p-2 mb-3"
+              onClick={() => setShowMap(true)}
+            >
               Select On Map
               <img src={mapIcon} className="ms-3" />
             </Button>
@@ -117,8 +137,8 @@ function Order() {
           <Col>
             {cartData?.length === 0 ? (
               <Col className="d-flex flex-column justify-content-center align-items-center">
-                <Image src={cartEmpty} width="200px" />
-                <h1>Oooops!!, You have no cart!! :( </h1>
+                <Image src={cartEmpty} width="300px" className="mb-3" />
+                <h1>Oooops!!, you didn't order anything :( </h1>
               </Col>
             ) : (
               cartData?.map((item) => (
@@ -139,16 +159,15 @@ function Order() {
                         <Col className="col-9 ps-5 ps-lg-0">
                           <h6 className="my-3 fw-bold">{item.product.name}</h6>
                           <h6 className="my-3">
-                            <span className="m-2">-</span>
                             <Button
                               className="bg-light border-0 rounded text-dark"
                               onClick={() => {
                                 deleteCartHandler(item.product.id);
                               }}
                             >
-                              {item.qty}
+                              <span className="m-2">-</span>
                             </Button>
-                            <span className="m-2">+</span>
+                            {item.qty}
                             <Button
                               className="bg-light border-0 rounded text-dark"
                               onClick={() => {
@@ -157,13 +176,17 @@ function Order() {
                                   item.product.price
                                 );
                               }}
-                            ></Button>
+                            >
+                              <span className="m-2">+</span>
+                            </Button>
                           </h6>
                         </Col>
                       </Row>
                     </Col>
                     <Col className="col-4 text-end">
-                      <h6 className="text-danger my-3">{item.price}</h6>
+                      <h6 className="text-danger my-3">
+                        {convertRupiah.convert(item.price)}
+                      </h6>
                       <h6 className="text-danger my-3">
                         <img
                           src={trash}
@@ -196,9 +219,9 @@ function Order() {
                         <h6>Ongkir</h6>
                       </Col>
                       <Col className="text-end">
-                        <h6>Rp. {subTotal}</h6>
+                        <h6>{convertRupiah.convert(subTotal)}</h6>
                         <h6>{cartLength}</h6>
-                        <h6>Rp. {10.0 * cartLength}</h6>
+                        <h6>{convertRupiah.convert(10000 * cartLength)}</h6>
                       </Col>
                     </Row>
                   </Col>
@@ -213,7 +236,9 @@ function Order() {
                         <h6>Total</h6>
                       </Col>
                       <Col className="col-4 text-end">
-                        <h6>Rp. {subTotal + 10000 * cartLength}</h6>
+                        <h6>
+                          {convertRupiah.convert(subTotal + 10000 * cartLength)}
+                        </h6>
                       </Col>
                     </Row>
                   </Col>
@@ -222,16 +247,34 @@ function Order() {
             </Col>
           )}
         </Row>
+        <Form.Group className="mt-5 pt-lg-5 float-end col-12 col-lg-8">
+          <Button
+            className="btn-nav px-5 f-14 fw-bold float-end my-3 w-25"
+            onClick={setShowPay}
+          >
+            Order
+          </Button>
+          <Modal
+            size="md"
+            show={showPay}
+            onHide={() => setShowPay(false)}
+            aria-labelledby="example-modal-sizes-title-lg"
+          >
+            <Modal.Body>
+              <div className="text-center">
+                <h2 className="text-success">Pembayaran berhasil</h2>
+                <img src={done} className="w-25" animation="grow" />
+                <hr />
+                <h3>Total Harga</h3>
+                <h2 className="text-danger">
+                  {convertRupiah.convert(subTotal + 10000 * cartLength)}
+                </h2>
+              </div>
+            </Modal.Body>
+          </Modal>
+        </Form.Group>
 
-        <Modal
-          show={show}
-          onHide={() => setShow(false)}
-          size="lg"
-          aria-labelledby="contained-modal-title-vcenter"
-          centered
-        >
-          <Image src={mapIcon} />
-        </Modal>
+        <Map showMap={showMap} setShowMap={setShowMap} />
       </div>
     </Container>
   );

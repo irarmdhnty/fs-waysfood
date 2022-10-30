@@ -176,6 +176,7 @@ const FormEdit = () => {
             type="text"
             placeholder="Location"
             className="border-form border-dark text-dark"
+            disabled
           />
         </Col>
         <Col className="col-12 col-md-3">
@@ -202,7 +203,7 @@ const FormEdit = () => {
         </Col>
       </Row>
       <div className="d-flex justify-content-end">
-        <Button className="btn-nav w-25 mt-5 " type="submit">
+        <Button className="btn-nav w-25 my-5 " type="submit">
           Save
         </Button>
       </div>

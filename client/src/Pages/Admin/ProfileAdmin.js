@@ -70,6 +70,7 @@ function ProfileAdmin() {
                   </Col>
                   <Col className="ms-5" style={{ textAlign: "end" }}>
                     <img src={logoName} />
+                    <br/>
                     <Button className="btn-finish fw-bold fs-5 w-50">
                       Finished
                     </Button>
@@ -91,6 +92,7 @@ function ProfileAdmin() {
                   </Col>
                   <Col className="ms-5" style={{ textAlign: "end" }}>
                     <img src={logoName} />
+                    <br/>
                     <Button className="btn-finish fw-bold fs-5 w-50">
                       Finished
                     </Button>

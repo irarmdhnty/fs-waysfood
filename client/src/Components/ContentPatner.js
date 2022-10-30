@@ -22,7 +22,6 @@ function ContentPatner() {
 
   let { data: users } = useQuery("usersCache", async () => {
     const response = await API.get("/users");
-    console.log("responseeeee", response.data.data);
     return response.data.data;
   });
 

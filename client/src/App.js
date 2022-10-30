@@ -10,6 +10,7 @@ import { useContext, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import "./styles/style.css";
+import "./App.css"
 import Home from "./Pages/Home";
 import Detail from "./Pages/Detail";
 import Navbars from "./Components/Navbars";
