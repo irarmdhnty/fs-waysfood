@@ -43,29 +43,18 @@ function Navbars() {
     setUser(response.data.data);
   };
 
+  const getCart = async () => {
+    const response = await API.get(`/carts`);
+    setCartLength(response.data.data.length);
+  };
+
+  getCart();
+
   useEffect(() => {
     if (state.user) {
       getUser();
     }
   }, [state]);
-
-  const { data: cartData, refetch: getCartLength } = useQuery(
-    "cartCache",
-    async () => {
-      try {
-        const response = await API.get("/carts");
-        return response.data.data;
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-  );
-  
-
-  useEffect(() => {
-    getCartLength();
-  }, [cartData]);
 
   const handleLogut = () => {
     dispatch({
@@ -116,12 +105,12 @@ function Navbars() {
                     style={{ cursor: "pointer" }}
                     onClick={() => navigate("/order")}
                   />
-                  {cartData?.length !== 0 && (
+                  {cartLength > 0 && (
                     <Badge
                       style={{ width: "25px", height: "20px" }}
                       className="bg-danger position-absolute badge"
                     >
-                      {cartData?.length}
+                      {cartLength}
                     </Badge>
                   )}
                   <Dropdown.Toggle variant="bg-yellow" id="dropdown-basic">
